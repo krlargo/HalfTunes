@@ -42,7 +42,14 @@ class DownloadService {
   // MARK: - Download methods called by TrackCell delegate methods
 
   func startDownload(_ track: Track) {
-    // TODO
+    /// Create new download object
+    let download = Download(track: track);
+    download.task = downloadsSession.dataTask(with: track.previewURL); /// Init download task
+    download.task?.resume(); /// Start download task
+    download.isDownloading = true;
+    
+    /// Add to activeDownloads
+    activeDownloads[track.previewURL] = download;
   }
   // TODO: previewURL is http://a902.phobos.apple.com/...
   // why doesn't ATS prevent this download?
