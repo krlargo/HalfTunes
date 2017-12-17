@@ -78,8 +78,12 @@ class TrackCell: UITableViewCell {
       showDownloadControls = true;
       let title = download.isDownloading ? "Pause" : "Resume";
       pauseButton.setTitle(title, for: .normal);
+      
+      progressLabel.text = download.isDownloading ? "Downloading..." : "Paused"
     }
     
+    progressView.isHidden = !showDownloadControls
+    progressLabel.isHidden = !showDownloadControls
     pauseButton.isHidden = !showDownloadControls;
     cancelButton.isHidden = !showDownloadControls;
     
@@ -88,4 +92,8 @@ class TrackCell: UITableViewCell {
     downloadButton.isHidden = downloaded || showDownloadControls;
   }
 
+  func updateDisplay(progress: Float, totalSize : String) {
+    progressView.progress = progress
+    progressLabel.text = String(format: "%.1f%% of %@", progress * 100, totalSize)
+  }
 }
