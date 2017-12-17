@@ -62,5 +62,6 @@ extension SearchViewController: URLSessionDelegate {
       let completionHandler = appDelegate.backgroundSessionCompletionHandler {
       appDelegate.backgroundSessionCompletionHandler = nil;
       completionHandler();
+    }
   }
 }
