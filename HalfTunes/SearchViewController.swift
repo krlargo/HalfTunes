@@ -91,7 +91,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     cell.delegate = self
 
     let track = searchResults[indexPath.row]
-    cell.configure(track: track, downloaded: track.downloaded)
+    let download = downloadService.activeDownloads[track.previewURL];
+    cell.configure(track: track, downloaded: track.downloaded, download: download);
 
     return cell
   }
