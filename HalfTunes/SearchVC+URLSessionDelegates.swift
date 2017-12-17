@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+extension SearchViewController: URLSessionDownloadDelegate {
+  func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+    print("Finished downloading to \(location)");
+  }
+}
