@@ -43,36 +43,32 @@ class QueryService {
   /// Instantiate a default-configured URLSession
   /// Declare a URLSessionDataTask to be set for downloading data to memory
   let defaultSession = URLSession(configuration: .default);
-  let dataTask: URLSessionDataTask?
+  var dataTask: URLSessionDataTask?
 
   func getSearchResults(searchTerm: String, completion: @escaping QueryResult) {
     /// 2) TODO
-    DispatchQueue.main.async {
-      dataTask?.cancel(); /// Cancel any active running DataTask
+    dataTask?.cancel(); /// Cancel any active running DataTask
       
-      if var urlComponents = URLComponents(string: "https://itunes.apple.com/search") {
-        /// Doesn't need extra backslash
-        urlComponents.query("media=music&entity=song&term=\(searchTerm)");
+    if var urlComponents = URLComponents(string: "https://itunes.apple.com/search") {
+      /// Doesn't need extra backslash
+      urlComponents.query = "media=music&entity=song&term=\(searchTerm)";
         
-        guard let url = urlComponents.url else { return; }
-        print("url: \(url)\n");
-        dataTask = defaultSession.dataTask(with: url, completionHandler: { data, response, error in
-          /// Attempt to update search results on completion
-          defer { self.dataTask = nil; } /// Clear dataTask when exiting completionHandler scope
+      guard let url = urlComponents.url else { return; }
+      print("url: \(url)\n");
+      dataTask = defaultSession.dataTask(with: url) { data, response, error in
+        /// Attempt to update search results on completion
+        defer { self.dataTask = nil; } /// Clear dataTask when exiting completionHandler scope
           
-          if let error = error {
-            self.errorMessage += "DataTask error: " + error.localizedDescription + "\n";
-          } else if let data = data {
-            let response = response as? HTTPURLResponse, response.statusCode == 200 {
-              self.updateSearchResults(data); /// Parse data into in-file tracks array
+        if let error = error {
+          self.errorMessage += "DataTask error: " + error.localizedDescription + "\n";
+        } else if let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 {
+          self.updateSearchResults(data); /// Parse data into in-file tracks array
               
-              DispatchQueue.main.async {
-                /// Display results in SearchViewController
-                completion(self.tracks, self.errorMessage);
-              }
-            }
+          DispatchQueue.main.async {
+            /// Display results in SearchViewController
+            completion(self.tracks, self.errorMessage);
           }
-        });
+        }
       }
       /// Task starts in a suspended state by default; start the data task
       dataTask?.resume();
