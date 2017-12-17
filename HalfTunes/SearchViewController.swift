@@ -50,10 +50,20 @@ class SearchViewController: UIViewController {
   func localFilePath(for url: URL) -> URL {
     return documentsPath.appendingPathComponent(url.lastPathComponent)
   }
-
+  
+  /// 'lazy' allows var to be created after viewControler inits,
+  /// allowing 'self' to be passed as delegate
+  lazy var downloadsSession: URLSession = {
+    let configuration = URLSessionConfiguration.default
+    return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+  }()
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     tableView.tableFooterView = UIView()
+
+    ///
+    downloadService.downloadsSession = downloadsSession;
   }
 
   func playDownload(_ track: Track) {
