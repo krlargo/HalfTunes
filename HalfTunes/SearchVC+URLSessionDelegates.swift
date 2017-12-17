@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension SearchViewController: URLSessionDownloadDelegate {
   func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
@@ -50,5 +51,16 @@ extension SearchViewController: URLSessionDownloadDelegate {
         trackCell.updateDisplay(progress: download.progress, totalSize: totalSize);
       }
     }
+  }
+}
+
+extension SearchViewController: URLSessionDelegate {
+  
+  // Standard background session handler
+  func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+    if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+      let completionHandler = appDelegate.backgroundSessionCompletionHandler {
+      appDelegate.backgroundSessionCompletionHandler = nil;
+      completionHandler();
   }
 }
