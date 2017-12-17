@@ -55,7 +55,13 @@ class DownloadService {
   // why doesn't ATS prevent this download?
 
   func pauseDownload(_ track: Track) {
-    // TODO
+    guard let download = activeDownloads[track.previewURL]  else { return; }
+    if(download.isDownloading) {
+      download.task?.cancel(byProducingResumeData: { data in
+        download.resumeData = data;
+      })
+      download.isDownloading = false;
+    }
   }
 
   func cancelDownload(_ track: Track) {
