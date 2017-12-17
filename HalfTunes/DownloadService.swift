@@ -59,7 +59,10 @@ class DownloadService {
   }
 
   func cancelDownload(_ track: Track) {
-    // TODO
+    if let download = activeDownloads[track.previewURL] {
+      download.task?.cancel();
+      activeDownloads[track.previewURL] = nil;
+    }
   }
 
   func resumeDownload(_ track: Track) {
