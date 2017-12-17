@@ -44,7 +44,7 @@ class SearchViewController: UIViewController {
   var searchResults: [Track] = []
   let queryService = QueryService()
   let downloadService = DownloadService()
-
+  
   // Get local file path: download task stores tune here; AV player plays it.
   let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
   func localFilePath(for url: URL) -> URL {
@@ -54,7 +54,7 @@ class SearchViewController: UIViewController {
   /// 'lazy' allows var to be created after viewControler inits,
   /// allowing 'self' to be passed as delegate
   lazy var downloadsSession: URLSession = {
-    let configuration = URLSessionConfiguration.default
+    let configuration = URLSessionConfiguration.background(withIdentifier: "bgSessionConfiguration");
     return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
   }()
   
