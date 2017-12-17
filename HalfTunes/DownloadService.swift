@@ -44,7 +44,7 @@ class DownloadService {
   func startDownload(_ track: Track) {
     /// Create new download object
     let download = Download(track: track);
-    download.task = downloadsSession.dataTask(with: track.previewURL); /// Init download task
+    download.task = downloadsSession.downloadTask(with: track.previewURL); /// Init download task
     download.task?.resume(); /// Start download task
     download.isDownloading = true;
     
@@ -63,7 +63,15 @@ class DownloadService {
   }
 
   func resumeDownload(_ track: Track) {
-    // TODO
+    /// Attempt to resume download; if not available, then start new download
+    guard let download = activeDownloads[track.previewURL] else { return; }
+    
+    if let resumeData = download.resumeData {
+      download.task = downloadsSession.downloadTask(withResumeData: resumeData);
+    } else {
+      download.task = downloadsSession.downloadTask(with: download.track.previewURL);
+    }
+    download.task!.resume();
+    download.isDownloading = true;
   }
-
 }
