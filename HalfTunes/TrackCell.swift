@@ -67,7 +67,7 @@ class TrackCell: UITableViewCell {
     delegate?.downloadTapped(self)
   }
 
-  func configure(track: Track, downloaded: Bool) {
+  func configure(track: Track, downloaded: Bool, download: Download?) {
     titleLabel.text = track.name
     artistLabel.text = track.artist
 
