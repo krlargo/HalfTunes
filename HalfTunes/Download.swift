@@ -18,10 +18,10 @@ class Download {
   
   // Download service sets these values:
   var task: URLSessionDownloadTask?
-  var isDownloading = false
-  var resumeData: Data?
+  var isDownloading = false /// Downloading or paused
+  var resumeData: Data? /// Stored data when download is paused; if server permits, it can be resumed
   
   // Download delegate sets this value:
-  var progress: Float = 0
+  var progress: Float = 0 /// Progress percentage
   
 }
